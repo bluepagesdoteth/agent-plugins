@@ -1,0 +1,42 @@
+{
+  "name": "bluepages",
+  "owner": {
+    "name": "Bluepages",
+    "email": "whitepagesbase@proton.me"
+  },
+  "metadata": {
+    "description": "Crypto address and Twitter/Farcaster identity lookup tools powered by Bluepages.fyi",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "bluepages",
+      "source": "./plugins/bluepages",
+      "description": "Look up wallet addresses and Twitter/Farcaster identities via Bluepages.fyi MCP server and skill",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bluepages"
+      },
+      "homepage": "https://bluepages.fyi",
+      "repository": "https://github.com/bluepageseth/agent-plugins",
+      "license": "MIT",
+      "keywords": [
+        "crypto",
+        "ethereum",
+        "twitter",
+        "farcaster",
+        "identity",
+        "wallet",
+        "web3",
+        "onchain"
+      ],
+      "category": "web3",
+      "tags": [
+        "address-lookup",
+        "identity",
+        "blockchain",
+        "mcp-server"
+      ]
+    }
+  ]
+}

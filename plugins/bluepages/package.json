@@ -1,0 +1,11 @@
+{
+  "name": "bluepages-mcp-server",
+  "version": "1.0.0",
+  "description": "Bluepages MCP server for crypto address/identity lookups",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ethers": "^6.0.0",
+    "node-fetch": "^3.0.0"
+  }
+}

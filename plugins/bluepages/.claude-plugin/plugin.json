@@ -1,0 +1,24 @@
+{
+  "name": "bluepages",
+  "description": "Ethereum address and Twitter/Farcaster identity lookups via Bluepages.fyi. Provides an MCP server with 10 tools for single/batch address lookups, streaming for large lists, and credit management. Also includes a /bluepages skill for guided workflows.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Bluepages"
+  },
+  "homepage": "https://bluepages.fyi",
+  "repository": "https://github.com/bluepageseth/agent-plugins",
+  "license": "MIT",
+  "mcpServers": {
+    "bluepages": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "cd \"${CLAUDE_PLUGIN_ROOT}\" && [ -d node_modules ] || npm install --production --no-fund --no-audit >&2 && exec node mcp-server.js"
+      ],
+      "env": {
+        "BLUEPAGES_API_KEY": "${BLUEPAGES_API_KEY:-}",
+        "PRIVATE_KEY": "${PRIVATE_KEY:-}"
+      }
+    }
+  }
+}
