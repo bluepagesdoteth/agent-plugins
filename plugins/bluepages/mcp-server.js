@@ -617,8 +617,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     });
   }
 
-  // Add purchase_credits tool only if using x402 (has wallet)
+  // Add wallet-based tools only if using x402 (has wallet)
   if (wallet) {
+    tools.push({
+      name: "get_api_key",
+      description:
+        "Get your API key by signing a message with your wallet. Creates an account if you don't have one. Use this after purchase_credits to get your API key, or to retrieve an existing key.",
+      inputSchema: {
+        type: "object",
+        properties: {},
+      },
+    });
+
     tools.push({
       name: "purchase_credits",
       description:
@@ -1002,6 +1012,48 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: "text",
               text: `✓ Credit alert threshold set to ${customAlertThreshold.toLocaleString()} credits.\nYou'll receive a warning when your balance drops below this level.`,
+            },
+          ],
+        };
+      }
+
+      case "get_api_key": {
+        if (!wallet) {
+          throw new Error("get_api_key requires PRIVATE_KEY to sign the authentication message");
+        }
+
+        // Create and sign authentication message
+        const message = `Authenticate with Bluepages API\n\nAddress: ${wallet.address}\nTimestamp: ${Date.now()}`;
+        const signature = await wallet.signMessage(message);
+
+        // Call auth endpoint
+        const response = await fetch(`${API_URL}/api/auth`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            address: wallet.address,
+            message,
+            signature,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: response.statusText }));
+          throw new Error(error.error || `Auth failed: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const user = result.user;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `✓ ${result.isNew ? "Account created!" : "Retrieved API key"}\n\n` +
+                `API Key: ${user.apiKey}\n` +
+                `Address: ${user.address}\n` +
+                `Credits: ${user.credits?.toLocaleString() || 0}\n\n` +
+                `To use the API key, set:\nexport BLUEPAGES_API_KEY="${user.apiKey}"`,
             },
           ],
         };

@@ -22,10 +22,18 @@ Set one of these environment variables before starting Claude Code:
 
 ## Getting API Credits
 
-### Option A: Programmatic Purchase (for agents with PRIVATE_KEY)
+### Option A: Programmatic Setup (for agents with PRIVATE_KEY)
 
-If you have `PRIVATE_KEY` configured, use the `purchase_credits` tool:
+If you have `PRIVATE_KEY` configured:
 
+**Step 1: Get your API key**
+```
+Tool: get_api_key
+Args: {}
+```
+This signs a message with your wallet and returns your API key (creates an account if needed).
+
+**Step 2: Purchase credits**
 ```
 Tool: purchase_credits
 Args: { "package": "starter" }
@@ -36,7 +44,7 @@ Packages:
 - **pro**: 50,000 credits for $45 USDC (10% discount)
 - **enterprise**: 1,000,000 credits for $600 USDC (40% discount)
 
-After purchase, credits are linked to your wallet address. You can then get an API key for that address from the `/api/auth` endpoint.
+After purchase, use `get_api_key` again to see your updated balance.
 
 ### Option B: Manual Setup (for humans)
 
@@ -70,6 +78,7 @@ This plugin provides the following tools via MCP:
 | `batch_get_data_streaming` | same as batch_get_data | For large lists (100+), shows progress             |
 | `check_credits`            | free                   | Check remaining credits (API key only)             |
 | `set_credit_alert`         | free                   | Set low-credit warning threshold (API key only)    |
+| `get_api_key`              | free                   | Get/create API key by signing message (PRIVATE_KEY)|
 | `purchase_credits`         | $5-$600 USDC           | Buy credits via x402 (PRIVATE_KEY only)            |
 
 ## Input Format
