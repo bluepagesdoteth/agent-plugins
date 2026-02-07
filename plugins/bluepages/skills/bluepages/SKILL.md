@@ -22,29 +22,43 @@ Set one of these environment variables before starting Claude Code:
 
 ## Getting API Credits
 
-### Option A: Programmatic Setup (for agents with PRIVATE_KEY)
+### Option A: Programmatic Setup (for agents with private key)
 
-If you have `PRIVATE_KEY` configured:
+If you have a private key, you can get your API key by signing a message.
 
-**Step 1: Get your API key**
+**HTTP Endpoint: `POST /api/auth`**
+
+```javascript
+// 1. Create message with your address and timestamp
+const message = `Authenticate with Bluepages API\n\nAddress: ${walletAddress}\nTimestamp: ${Date.now()}`;
+
+// 2. Sign with your private key (EIP-191 personal sign)
+const signature = await wallet.signMessage(message);
+
+// 3. Call /api/auth
+const response = await fetch('https://bluepages.fyi/api/auth', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ address: walletAddress, message, signature })
+});
+
+const { user } = await response.json();
+console.log('API Key:', user.apiKey);
+console.log('Credits:', user.credits);
+```
+
+**MCP Tool: `get_api_key`** (if using MCP server)
 ```
 Tool: get_api_key
 Args: {}
 ```
-This signs a message with your wallet and returns your API key (creates an account if needed).
 
-**Step 2: Purchase credits**
-```
-Tool: purchase_credits
-Args: { "package": "starter" }
-```
+**Purchase credits: `POST /api/credits/purchase?package=starter`**
+- Pay via x402 (USDC on Base)
+- Packages: starter ($5), pro ($45), enterprise ($600)
+- Account + API key created automatically if new
 
-Packages:
-- **starter**: 5,000 credits for $5 USDC
-- **pro**: 50,000 credits for $45 USDC (10% discount)
-- **enterprise**: 1,000,000 credits for $600 USDC (40% discount)
-
-After purchase, use `get_api_key` again to see your updated balance.
+After purchase, call `/api/auth` again to retrieve your API key and see updated balance.
 
 ### Option B: Manual Setup (for humans)
 
