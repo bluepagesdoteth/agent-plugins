@@ -617,6 +617,26 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     });
   }
 
+  // Add purchase_credits tool only if using x402 (has wallet)
+  if (wallet) {
+    tools.push({
+      name: "purchase_credits",
+      description:
+        "Purchase API credits using x402 payment (USDC on Base). Packages: starter (5,000 credits, $5), pro (50,000 credits, $45), enterprise (1,000,000 credits, $600). Returns an API key if you don't have one.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          package: {
+            type: "string",
+            enum: ["starter", "pro", "enterprise"],
+            description: "Credit package to purchase",
+          },
+        },
+        required: ["package"],
+      },
+    });
+  }
+
   return { tools };
 });
 
@@ -982,6 +1002,77 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: "text",
               text: `✓ Credit alert threshold set to ${customAlertThreshold.toLocaleString()} credits.\nYou'll receive a warning when your balance drops below this level.`,
+            },
+          ],
+        };
+      }
+
+      case "purchase_credits": {
+        if (!wallet) {
+          throw new Error("purchase_credits requires PRIVATE_KEY for x402 payments");
+        }
+
+        const packageName = args.package;
+        const packages = {
+          starter: { credits: 5000, priceUsd: 5, priceUsdc: "5000000" },
+          pro: { credits: 50000, priceUsd: 45, priceUsdc: "45000000" },
+          enterprise: { credits: 1000000, priceUsd: 600, priceUsdc: "600000000" },
+        };
+
+        const pkg = packages[packageName];
+        if (!pkg) {
+          throw new Error(`Invalid package: ${packageName}`);
+        }
+
+        await sendNotification(
+          "info",
+          `Purchasing ${pkg.credits.toLocaleString()} credits ($${pkg.priceUsd})...`,
+          { package: packageName }
+        );
+
+        // Make initial request to get payment requirements
+        const response1 = await fetch(`${API_URL}/api/credits/purchase?package=${packageName}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ address: wallet.address }),
+        });
+
+        if (response1.status !== 402) {
+          const error = await response1.json().catch(() => ({ error: response1.statusText }));
+          throw new Error(error.error || `Unexpected response: ${response1.status}`);
+        }
+
+        const paymentRequest = await response1.json();
+        const paymentHeader = await createPaymentHeader(paymentRequest);
+
+        // Make payment
+        const response2 = await fetch(`${API_URL}/api/credits/purchase?package=${packageName}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-PAYMENT": paymentHeader,
+          },
+          body: JSON.stringify({ address: wallet.address }),
+        });
+
+        if (!response2.ok) {
+          const error = await response2.json().catch(() => ({ error: response2.statusText }));
+          throw new Error(error.error || `Payment failed: ${response2.status}`);
+        }
+
+        const result = await response2.json();
+
+        await sendNotification(
+          "info",
+          `✓ Purchased ${result.creditsAdded?.toLocaleString() || pkg.credits.toLocaleString()} credits!`,
+          { credits: result.newCredits, txHash: result.transactionHash }
+        );
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `✓ Successfully purchased ${result.creditsAdded?.toLocaleString() || pkg.credits.toLocaleString()} credits!\n\nNew balance: ${result.newCredits?.toLocaleString() || "unknown"} credits\nTransaction: ${result.transactionHash || "confirmed"}\n\nYou can now switch to API key authentication for 20% cheaper requests.\nYour wallet address: ${wallet.address}`,
             },
           ],
         };
