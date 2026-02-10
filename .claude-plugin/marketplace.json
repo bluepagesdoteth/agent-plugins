@@ -18,7 +18,7 @@
         "name": "Bluepages"
       },
       "homepage": "https://bluepages.fyi",
-      "repository": "https://github.com/bluepageseth/agent-plugins",
+      "repository": "https://github.com/bluepagesdoteth/agent-plugins",
       "license": "MIT",
       "keywords": [
         "crypto",
