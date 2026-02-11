@@ -28,7 +28,10 @@
         "identity",
         "wallet",
         "web3",
-        "onchain"
+        "onchain",
+        "osint",
+        "x402",
+        "x"
       ],
       "category": "web3",
       "tags": [
