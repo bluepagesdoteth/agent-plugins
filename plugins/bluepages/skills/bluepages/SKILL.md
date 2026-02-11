@@ -12,7 +12,12 @@ metadata:
 
 # Bluepages
 
-800K+ verified Ethereum address <> Twitter/X mappings, plus Farcaster. Tools and pricing are described by the MCP server — call `list_tools` to see them.
+800K+ verified Ethereum address <> Twitter/X mappings, plus Farcaster.
+
+## Setup
+
+Requires the Bluepages MCP server: `npx -y github:bluepagesdoteth/bluepages-mcp`
+or direct API calls (see below). The MCP server is the recommended way to use Bluepages.
 
 ## Authentication
 
