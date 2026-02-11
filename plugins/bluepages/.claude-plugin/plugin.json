@@ -10,11 +10,8 @@
   "license": "MIT",
   "mcpServers": {
     "bluepages": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd \"${CLAUDE_PLUGIN_ROOT}\" && [ -d node_modules ] || npm install --production --no-fund --no-audit >&2 && exec node mcp-server.js"
-      ],
+      "command": "npx",
+      "args": ["-y", "github:bluepagesdoteth/bluepages-mcp"],
       "env": {
         "BLUEPAGES_API_KEY": "${BLUEPAGES_API_KEY:-}",
         "PRIVATE_KEY": "${PRIVATE_KEY:-}"
