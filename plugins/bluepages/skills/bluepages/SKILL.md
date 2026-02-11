@@ -4,10 +4,12 @@ description: >
   Look up wallet address <> Twitter/Farcaster identity mappings via Bluepages.fyi.
   Use when asked who owns a wallet, finding addresses for a Twitter/Farcaster handle,
   looking up 0x addresses, or any wallet identity and address attribution queries.
-compatibility: Requires MCP server via npx github:bluepagesdoteth/bluepages-mcp
+compatibility: >
+  Requires MCP server (npx github:bluepagesdoteth/bluepages-mcp) and one of:
+  BLUEPAGES_API_KEY or PRIVATE_KEY (Ethereum, for x402 payments).
 metadata:
   author: bluepages
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Bluepages
@@ -24,9 +26,11 @@ or direct API calls (see below). The MCP server is the recommended way to use Bl
 Requires one of these env vars:
 
 - **`BLUEPAGES_API_KEY`** (recommended) — 20% cheaper, 2x rate limits.
-- **`PRIVATE_KEY`** — Ethereum key for x402 pay-per-request (USDC on Base).
+- **`PRIVATE_KEY`** — Ethereum private key for x402 pay-per-request (USDC on Base).
 
-**With a private key**, you can self-serve: call `purchase_credits` to buy credits, then `get_api_key` to retrieve your API key. No human interaction needed.
+> **Security note**: Never use a main wallet key. Use a dedicated, funded-only-as-needed agent wallet if providing `PRIVATE_KEY`.
+
+**With a private key**, you can either pay per request via x402 or purchase a `BLUEPAGES_API_KEY` using the `get_api_key` and `purchase_credits` MCP tools.
 
 **Without a private key**, the user must get an API key at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html) and set `BLUEPAGES_API_KEY`.
 
