@@ -9,7 +9,17 @@ compatibility: >
   BLUEPAGES_API_KEY or PRIVATE_KEY (Ethereum, for x402 payments).
 metadata:
   author: bluepages
-  version: "1.0.1"
+  version: "1.0.2"
+  openclaw:
+    emoji: 📘
+    install:
+      - kind: node
+        package: "github:bluepagesdoteth/bluepages-mcp"
+    homepage: https://bluepages.fyi/docs.html
+    requires:
+      env:
+        - BLUEPAGES_API_KEY
+        - PRIVATE_KEY
 ---
 
 # Bluepages

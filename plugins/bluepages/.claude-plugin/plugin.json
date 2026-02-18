@@ -1,7 +1,7 @@
 {
   "name": "bluepages",
   "description": "Ethereum address and Twitter/Farcaster identity lookups via Bluepages.fyi. Provides an MCP server with 10 tools for single/batch address lookups, streaming for large lists, and credit management. Also includes a /bluepages skill for guided workflows.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "author": {
     "name": "Bluepages"
   },

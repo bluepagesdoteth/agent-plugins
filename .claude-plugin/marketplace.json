@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Crypto address and Twitter/Farcaster identity lookup tools powered by Bluepages.fyi",
-    "version": "1.0.0"
+    "version": "1.0.2"
   },
   "plugins": [
     {
       "name": "bluepages",
       "source": "./plugins/bluepages",
       "description": "Look up wallet addresses and Twitter/Farcaster identities via Bluepages.fyi MCP server and skill",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "author": {
         "name": "Bluepages"
       },
