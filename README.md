@@ -1,10 +1,6 @@
 # Bluepages Agent Plugins
 
-Crypto address <> Twitter/Farcaster identity lookups for AI agents, powered by [bluepages.fyi](https://bluepages.fyi).
-
-## What is Bluepages?
-
-Bluepages maps Ethereum addresses to Twitter and Farcaster identities (and vice versa), covering 800,000+ verified connections. See [bluepages.fyi](https://bluepages.fyi) for more.
+Multi-chain wallet address <> social identity and label lookups for AI agents, powered by [bluepages.fyi](https://bluepages.fyi). Covers ETH, BTC, SOL, TRON, XMR, TON, Celestia, and XRP addresses mapped to Twitter, Farcaster, GitHub, Discord, Telegram, and 10+ more identity types, plus labels (CEX wallets, etc.).
 
 ## Installation
 
@@ -30,30 +26,28 @@ or
 
 Restart Claude Code after saving. You can also set the env var manually:
 
-### Option 1: x402 Payments
+### Option 1: API Key (recommended)
 
-Pay-per-request with USDC on Base. No API key needed.
-
-```bash
-export PRIVATE_KEY="your-ethereum-private-key"
-```
-
-Requires a funded wallet on Base with USDC.
-
-### Option 2: API Key
-
-20% cheaper, 2x rate limits. Recommended for power users. Get a key at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html).
+20% cheaper, 2x rate limits. Get a key at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html).
 
 ```bash
 export BLUEPAGES_API_KEY="your-key-here"
 ```
 
+### Option 2: x402 Payments
+
+Pay-per-request with USDC on Base. No API key needed. Requires a funded wallet on Base.
+
+```bash
+export PRIVATE_KEY="your-ethereum-private-key"
+```
+
 ## What's Included
 
-| Component          | Description                                                   |
-| ------------------ | ------------------------------------------------------------- |
-| MCP Server         | 10 tools — single/batch lookups, streaming, credit management |
-| Skill `/bluepages` | Guided workflow, auto-selects the right tool for your query   |
+| Component          | Description                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| MCP Server         | 13 tools — single/batch lookups, tweet search, streaming, credit management        |
+| Skill `/bluepages` | Guided workflow, auto-selects the right tool for your query                        |
 
 ## Links
 
