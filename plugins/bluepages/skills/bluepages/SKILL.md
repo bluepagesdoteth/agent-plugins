@@ -1,15 +1,15 @@
 ---
 name: bluepages
 description: >
-  Look up wallet address <> Twitter/Farcaster identity mappings via Bluepages.fyi.
-  Use when asked who owns a wallet, finding addresses for a Twitter/Farcaster handle,
-  looking up 0x addresses, or any wallet identity and address attribution queries.
+  Look up wallet <> social identity and label mappings via Bluepages.fyi.
+  Use when asked who owns a crypto address, finding wallets for a social handle,
+  identifying CEX/exchange wallets, or searching tweets mentioning an address.
 compatibility: >
   Requires MCP server (npx github:bluepagesdoteth/bluepages-mcp) and one of:
   BLUEPAGES_API_KEY or PRIVATE_KEY (Ethereum, for x402 payments).
 metadata:
   author: bluepages
-  version: "1.0.2"
+  version: "1.0.4"
   openclaw:
     emoji: 📘
     install:
@@ -24,76 +24,57 @@ metadata:
 
 # Bluepages
 
-800K+ verified Ethereum address <> Twitter/X mappings, plus Farcaster.
+Address <> identity + label lookups across ETH, BTC, SOL, TRON, XMR, TON, Celestia, and XRP.
 
-## Setup
+## Lookup strategy
 
-Requires the Bluepages MCP server: `npx -y github:bluepagesdoteth/bluepages-mcp`
-or direct API calls (see below). The MCP server is the recommended way to use Bluepages.
+The optimal workflow depends on the payment method:
+
+### API key users (per-result pricing)
+
+Data endpoints only charge when data is found — call them directly, no check step needed.
+
+- **Single**: `get_data_for_address` or `get_data_for_identity`.
+- **Batch**: `batch_get_data` (up to 50 items).
+- **Lists > 50**: `batch_get_data_streaming` for automatic batching with progress.
+
+### x402 users (flat pricing per request)
+
+Data requests charge a flat fee regardless of results — check first to filter.
+
+- **Single**: `check_address`/`check_identity` ($0.001) → `get_data_for_*` ($0.05) only if found.
+- **Batch**: `batch_check` ($0.04) → `batch_get_data` ($2.00) on found items only.
+- **Lists > 50**: `batch_check_streaming` → `batch_get_data_streaming` on found items.
+
+**No data?** Try `search_tweets` — finds tweet mentions even when no identity record exists.
+
+## Tools
+
+| Tool                    | Cost                   | Returns                                 |
+| ----------------------- | ---------------------- | --------------------------------------- |
+| `check_address`         | 1 credit               | Whether address has data                |
+| `check_identity`        | 1 credit               | Whether identity has data               |
+| `get_data_for_address`  | 50 (free if not found) | Identities, labels, sanctions, clusters |
+| `get_data_for_identity` | 50 (free if not found) | Addresses, labels, sanctions, clusters  |
+| `search_tweets`         | 50 (always charged)    | Tweets mentioning the address           |
+| `batch_check`           | 40/batch               | Which items have data                   |
+| `batch_get_data`        | 40/found item          | Full data, up to 50 items               |
+
+`batch_check_streaming` and `batch_get_data_streaming` exist for lists > 50.
+
+Account tools (discoverable via MCP): `check_credits`, `set_credit_alert`, `get_api_key`, `purchase_credits`.
+
+## Supported inputs
+
+**Addresses**: ETH, BTC (bech32 + base58), SOL, TRON, XMR, TON, Celestia, XRP — validated by the server.
+
+**Identities**: twitter, farcaster, github, discord, telegram, email, linkedin, reddit, instagram, facebook, atproto, circles, ens, phone, name.
 
 ## Authentication
 
-Requires one of these env vars:
+- **`BLUEPAGES_API_KEY`** — 20% cheaper, 2x rate limits. Get at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html).
+- **`PRIVATE_KEY`** — x402 pay-per-request (USDC on Base). Can also purchase an API key via `get_api_key` + `purchase_credits`.
 
-- **`BLUEPAGES_API_KEY`** (recommended) — 20% cheaper, 2x rate limits.
-- **`PRIVATE_KEY`** — Ethereum private key for x402 pay-per-request (USDC on Base).
+## HTTP fallback
 
-> **Security note**: Never use a main wallet key. Use a dedicated, funded-only-as-needed agent wallet if providing `PRIVATE_KEY`.
-
-**With a private key**, you can either pay per request via x402 or purchase a `BLUEPAGES_API_KEY` using the `get_api_key` and `purchase_credits` MCP tools.
-
-**Without a private key**, the user must get an API key at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html) and set `BLUEPAGES_API_KEY`.
-
-## Tools (quick reference)
-
-| Tool                       | Cost                   | Description                                        |
-| -------------------------- | ---------------------- | -------------------------------------------------- |
-| `check_address`            | 1 credit ($0.001)      | Check if address has data                          |
-| `check_twitter`            | 1 credit ($0.001)      | Check if Twitter handle has data                   |
-| `get_data_for_address`     | 50 credits ($0.05)     | Full identity data for address (free if not found) |
-| `get_data_for_twitter`     | 50 credits ($0.05)     | Full identity data for handle (free if not found)  |
-| `batch_check`              | 40 credits ($0.04)     | Check up to 50 items at once                       |
-| `batch_get_data`           | 40 credits/found item  | Data for up to 50 items (x402: $2.00 flat/batch)   |
-| `batch_check_streaming`    | same as batch_check    | For large lists (100+), shows progress             |
-| `batch_get_data_streaming` | same as batch_get_data | For large lists (100+), shows progress             |
-| `check_credits`            | free                   | Check remaining credits (API key only)             |
-| `set_credit_alert`         | free                   | Set low-credit warning threshold (API key only)    |
-| `get_api_key`              | free                   | Get/create API key via wallet signature            |
-| `purchase_credits`         | $5–$600 USDC           | Buy credits via x402 (PRIVATE_KEY only)            |
-
-## Input format
-
-- **Addresses**: 0x-prefixed, 42-char hex. Case-insensitive.
-- **Twitter handles**: With or without `@`.
-
-## Cost-saving workflow
-
-- **Single lookups**: `check_address`/`check_twitter` first (1 credit), then `get_data_*` only if found (50 credits). Skipping the check wastes credits on misses.
-- **Batch lookups**: Always two-phase — `batch_check` then `batch_get_data` on found items only. This saves ~90% vs fetching everything blind.
-- **Large lists (100+)**: Use `_streaming` variants for progress updates.
-
-## Rate limits
-
-- API Key: 60 req/min
-- x402: 30 req/min
-- Batch: max 50 items per request
-
-## Alternative: Direct HTTP API
-
-If MCP is unavailable, call the API directly. Auth depends on your setup:
-
-- **API key**: pass `X-API-KEY` header
-- **Private key (x402)**: endpoints return a 402 with payment details; sign and resend with `X-PAYMENT` header
-
-```bash
-# With API key
-curl "https://bluepages.fyi/check?address=0x..." -H "X-API-KEY: your-key"
-curl "https://bluepages.fyi/data?address=0x..." -H "X-API-KEY: your-key"
-
-# Batch check
-curl -X POST "https://bluepages.fyi/batch/check" \
-  -H "X-API-KEY: your-key" -H "Content-Type: application/json" \
-  -d '{"addresses": ["0x...", "0x..."]}'
-```
-
-Full API docs: [bluepages.fyi/docs](https://bluepages.fyi/docs.html)
+If MCP tools are unavailable, call `https://bluepages.fyi` directly with `X-API-KEY` header. Full docs: [bluepages.fyi/docs](https://bluepages.fyi/docs.html)
