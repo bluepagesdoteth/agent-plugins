@@ -1,6 +1,6 @@
 # Bluepages Agent Plugins
 
-Multi-chain wallet address <> social identity and label lookups for AI agents, powered by [bluepages.fyi](https://bluepages.fyi). Covers ETH, BTC, SOL, TRON, XMR, TON, Celestia, and XRP addresses mapped to Twitter, Farcaster, GitHub, Discord, Telegram, and 10+ more identity types, plus labels (CEX wallets, etc.).
+Multi-chain wallet address <> social identity and label lookups for AI agents, powered by [bluepages.fyi](https://bluepages.fyi). Covers ETH, BTC, LTC, BCH, SOL, TRON, DASH, DOGE, XMR, ZEC, ADA, XLM, ALGO, BNB, LSK, SC, TON, Celestia, and XRP addresses (case-insensitive lookups) mapped to Twitter, Farcaster, GitHub, Discord, Telegram, and 10+ more identity types, plus labels (CEX wallets, etc.).
 
 ## Installation
 
