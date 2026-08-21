@@ -24,7 +24,7 @@ metadata:
 
 # Bluepages
 
-Address <> identity + label lookups across ETH, BTC, SOL, TRON, XMR, TON, Celestia, and XRP.
+Address <> identity + label lookups across ETH, BTC, LTC, BCH, SOL, TRON, DASH, DOGE, XMR, ZEC, ADA, XLM, ALGO, BNB, LSK, SC, TON, Celestia, and XRP.
 
 ## Lookup strategy
 
@@ -66,7 +66,7 @@ Account tools (discoverable via MCP): `check_credits`, `set_credit_alert`, `get_
 
 ## Supported inputs
 
-**Addresses**: ETH, BTC (bech32 + base58), SOL, TRON, XMR, TON, Celestia, XRP — validated by the server.
+**Addresses**: ETH, BTC (bech32 + base58), LTC, BCH, SOL, TRON, DASH, DOGE, XMR (+ payment IDs), ZEC, ADA, XLM, ALGO, BNB, LSK, SC, TON, Celestia, XRP — validated by the server; lookups are case-insensitive, pass addresses as given.
 
 **Identities**: twitter, farcaster, github, discord, telegram, email, linkedin, reddit, instagram, facebook, atproto, circles, ens, phone, name.
 
