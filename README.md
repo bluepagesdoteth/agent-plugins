@@ -8,7 +8,7 @@ Multi-chain wallet address <> social identity and label lookups for AI agents, p
 
 ```bash
 # First install the marketplace
-/plugin marketplace add bluepageseth/agent-plugins
+/plugin marketplace add bluepagesdoteth/agent-plugins
 
 # Then install the plugin
 /plugin install bluepages
