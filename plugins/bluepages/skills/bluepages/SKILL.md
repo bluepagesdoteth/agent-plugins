@@ -72,7 +72,7 @@ Account tools (discoverable via MCP): `check_credits`, `set_credit_alert`, `get_
 
 ## Authentication
 
-- **`BLUEPAGES_API_KEY`** — 20% cheaper, 2x rate limits. Get at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html).
+- **`BLUEPAGES_API_KEY`** — Bulk discounts up to 40%, 2x rate limits. Get at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html).
 - **`PRIVATE_KEY`** — x402 pay-per-request (USDC on Base). Can also purchase an API key via `get_api_key` + `purchase_credits`.
 
 ## HTTP fallback
