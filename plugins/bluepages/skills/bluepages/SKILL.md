@@ -9,7 +9,7 @@ compatibility: >
   BLUEPAGES_API_KEY or PRIVATE_KEY (Ethereum, for x402 payments).
 metadata:
   author: bluepages
-  version: "1.2.0"
+  version: "1.2.1"
   openclaw:
     emoji: 📘
     install:
