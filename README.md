@@ -28,7 +28,7 @@ Restart Claude Code after saving. You can also set the env var manually:
 
 ### Option 1: API Key (recommended)
 
-Bulk discounts up to 40%, 2x rate limits. Get a key at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html).
+Up to 40% cheaper than x402 requests, 2x rate limits. Get a key at [bluepages.fyi/api-keys](https://bluepages.fyi/api-keys.html).
 
 ```bash
 export BLUEPAGES_API_KEY="your-key-here"
